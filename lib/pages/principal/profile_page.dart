@@ -38,12 +38,65 @@ class _ProfilePageState extends State<ProfilePage> {
             );
           }
           final client = snapshot.data!;
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          return ListView(
             children: [
-              Text('Name: ${client.name}'),
-              Text('Email: ${client.mail}'),
-              Text('Phone: ${client.phone}'),
+              Card(
+                margin: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  leading: const Icon(Icons.person),
+                  title: const Text('Nombre'),
+                  subtitle: Text(client.name),
+                  trailing: IconButton(
+                    icon:const Icon(Icons.edit),
+                    onPressed: () {
+                      // Acción para editar el nombre
+                    },
+                  ),
+                ),
+              ),
+              Card(
+                margin: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  leading: const Icon(Icons.person_outline),
+                  title:const Text('Apellido'),
+                  subtitle: Text(client.lastName),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () {
+                      // Acción para editar el apellido
+                    },
+                  ),
+                ),
+              ),
+              Card(
+                margin: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  leading: const Icon(Icons.email),
+                  title: const Text('Correo'),
+                  subtitle: Text(client.mail),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () {
+                      // Acción para editar el correo
+                    },
+                  ),
+                ),
+              ),
+              Card(
+                margin: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  leading: const Icon(Icons.phone_android),
+                  title: const Text('Teléfono'),
+                  subtitle: Text(client.phone),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () {
+                      // Acción para llamar al número de teléfono
+                    },
+                  ),
+                ),
+              ),
+              // Agrega más tarjetas o botones según sea necesario
             ],
           );
         } else {
