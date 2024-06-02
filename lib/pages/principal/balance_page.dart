@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 
-class BalancePage extends StatelessWidget {
+class BalancePage extends StatefulWidget {
+ 
   const BalancePage({super.key});
 
   @override
+  State<BalancePage> createState() => _BalancePageState();
+}
+
+class _BalancePageState extends State<BalancePage> {
+  @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('Balance Page'),
+      child: Text('Alerts Page'),
     );
   }
 }
+  

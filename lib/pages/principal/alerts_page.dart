@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class AlertsPage extends StatelessWidget {
+class AlertsPage extends StatefulWidget {
   const AlertsPage({super.key});
 
+  @override
+  State<AlertsPage> createState() => _AlertsPageState();
+}
+
+class _AlertsPageState extends State<AlertsPage> {
   @override
   Widget build(BuildContext context) {
     return const Center(
