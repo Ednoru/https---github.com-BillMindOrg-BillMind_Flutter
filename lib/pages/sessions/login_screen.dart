@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nav_bar/main.dart';
+import 'package:nav_bar/pages/sessions/register_screen.dart';
+import 'package:nav_bar/services/client_provider.dart';
 import 'package:nav_bar/services/client_service.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,49 +13,61 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  
-  final _fromKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   String _errorMessage = '';
-  /*
-  void _login() {
-    if (_fromKey.currentState!.validate()) {
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _login() async {
+    if (_formKey.currentState?.validate() ?? false) {
       final email = _emailController.text;
       final password = _passwordController.text;
 
-      if (_validateCredentials(email, password)) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MyHomePage()),
-        );
-      } else {
+      try {
+        ClientService clientService = ClientService();
+        int clientId = await clientService.login(email, password);
+        if (clientId != -1) {
+          Provider.of<ClientProvider>(context, listen: false).setClientId(clientId);
+          Navigator.pushReplacement(
+            context, 
+            MaterialPageRoute(builder: (context) => const MyHomePage()),
+          );
+        }
+        else {
+          setState(() {
+            _errorMessage = 'Email or password incorrect';
+          });
+        }
+      }
+      catch (e) {
         setState(() {
-          _errorMessage = 'Invalid email or password';
+          _errorMessage = 'Failed to login: $e';
         });
       }
     }
-  
   }
-  */
-
-  //genera la funcion _ValidateCredentials usando el email y password como parametros de entrada e integrando el archivo client_service.dart
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      appBar: AppBar(title: const Text('Login')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _fromKey,
+          key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
                 controller: _emailController,
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
@@ -62,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               TextFormField(
                 controller: _passwordController,
-                decoration: InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -71,16 +86,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: /*TODO: _login*/ () {},
-                child: Text('Login'),
+                onPressed: _login,
+                child: const Text('Login'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                  );
+                },
+                child:const Text('Registrarse'),
+              ),
+              const SizedBox(height: 20),
               if (_errorMessage.isNotEmpty)
                 Text(
                   _errorMessage,
-                  style: TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.red),
                 ),
             ],
           ),

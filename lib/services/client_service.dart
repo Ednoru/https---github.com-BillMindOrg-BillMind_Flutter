@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:nav_bar/models/debts.dart';
 
 class ClientService {
-  static const String baseUrl = 'http://10.0.2.2:8080/api/v1/clients';
+  static const String baseUrl = 'https://billmindbackend-production.up.railway.app/api/v1/clients';
 
   Future<List<Client>> getClients() async {
     try {
@@ -47,32 +47,33 @@ class ClientService {
     }
   }
 
-  Future<bool> login(String email, String password) async {
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/login'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'email': email,
-          'password': password,
-        }),
-      ).timeout(const Duration(seconds: 10));
+  Future<int> login(String email, String password) async {
+  try {
+    final response = await http.post(
+      Uri.parse('$baseUrl/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'password': password,
+      }),
+    ).timeout(const Duration(seconds: 10));
 
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        return false;
-      }
-    } on http.ClientException catch (e) {
-      throw Exception('Network error: $e');
-    } on TimeoutException catch (_) {
-      throw Exception('Request to $baseUrl timed out');
-    } catch (e) {
-      throw Exception('An unknown error occurred: $e');
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['id']; // Suponiendo que la respuesta contiene el ID del cliente
+    } else {
+      return -1;
     }
+  } on http.ClientException catch (e) {
+    throw Exception('Network error: $e');
+  } on TimeoutException catch (_) {
+    throw Exception('Request to $baseUrl timed out');
+  } catch (e) {
+    throw Exception('An unknown error occurred: $e');
   }
+}
 
   //obtener deudas de un cliente por id
   Future<List<Debts>> getClientDebts(int id, {required int clientId}) async {
@@ -94,4 +95,29 @@ class ClientService {
       throw Exception('An unknown error occurred: $e');
     }
   }
+
+  Future<int> registerClient(Client client) async {
+  try {
+    final response = await http.post(
+      Uri.parse(baseUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(client.toJson()),
+    ).timeout(const Duration(seconds: 10));
+
+    if (response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      return data['id']; // Suponiendo que la respuesta contiene el ID del cliente
+    } else {
+      return -1;
+    }
+  } on http.ClientException catch (e) {
+    throw Exception('Network error: $e');
+  } on TimeoutException catch (_) {
+    throw Exception('Request to $baseUrl timed out');
+  } catch (e) {
+    throw Exception('An unknown error occurred: $e');
+  }
+}
 }
