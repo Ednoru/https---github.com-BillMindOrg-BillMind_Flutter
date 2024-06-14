@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:nav_bar/models/debts.dart';
 
 class DebtsService {
-  static const String baseUrl = 'http://10.0.2.2:8080/api/v1/debts';
+  static const String baseUrl = 'https://billmindbackend-production.up.railway.app/api/v1/debts';
 
   /*Future<List<Debts>> getDebtsByClientId(int clientId) async {
     try {
