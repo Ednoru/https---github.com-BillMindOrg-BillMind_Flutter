@@ -44,6 +44,101 @@ class _DebtsPageState extends State<DebtsPage> {
     await dService.deleteDebt(debtId);
   }
 
+  /*
+  Future<void> showAddDebtDialog() async {
+    TextEditingController expirationController = TextEditingController();
+    TextEditingController amountController = TextEditingController();
+    TextEditingController descriptionController = TextEditingController();
+    TextEditingController relevanceController = TextEditingController();
+    late String selectedRelevance;
+
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Agregar nueva deuda'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  controller: expirationController,
+                  decoration: const InputDecoration(labelText: 'Descripción'),
+                ),
+                TextField(
+                  controller: amountController,
+                  decoration: const InputDecoration(labelText: 'Monto a pagar'),
+                ),
+                TextField(
+                  controller: descriptionController,
+                  decoration:
+                      const InputDecoration(labelText: 'Fecha de vencimiento'),
+                ),
+                DropdownButtonFormField<String>(
+                  value: selectedRelevance,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedRelevance = newValue!;
+                    });
+                  },
+                  items: <String>['Baja', 'Media', 'Alta']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  decoration: const InputDecoration(labelText: 'Relevancia'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Crear una nueva deuda con los datos ingresados por el usuario
+                Debts newDebt = Debts(
+                  id: 0, // Este valor puede ser 0 si el servidor asigna el ID
+                  expiration: expirationController.text,
+                  amount: amountController.text,
+                  description: descriptionController.text,
+                  relevance: relevanceController.text,
+                  client: Client(id: widget.clientId, name: '', lastName: '', email: ''),
+                );
+
+                // Llamar a la función addDebt() para agregar la nueva deuda
+                addDebt(newDebt);
+
+                // Cerrar el cuadro de diálogo
+                Navigator.of(context).pop();
+              },
+              child: const Text('Agregar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  */
+
+  Icon getRelevanceIcon(String relevance) {
+  switch (relevance) {
+    case 'Alta':
+      return const Icon(Icons.warning, color: Colors.red);
+    case 'Media':
+      return const Icon(Icons.emergency, color: Colors.amber);
+    case 'Baja':
+      return const Icon(Icons.low_priority, color: Colors.green);
+    default:
+      return const Icon(Icons.error); // En caso de que no se reconozca la relevancia
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,22 +160,18 @@ class _DebtsPageState extends State<DebtsPage> {
                 return Card(
                   margin: const EdgeInsets.all(8.0),
                   child: ListTile(
-                    leading: const Icon(Icons.payment,
-                        color: Colors.green),
+                    leading: getRelevanceIcon(debt.relevance),
                     title: Text(debt.description),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text('Monto: S/. ${debt.amount.toString()}'),
-                        Text('Vencimiento: ${debt.expiration}')
+                        Text('Vencimiento: ${debt.expiration}'),
+                        Text('Relevancia: ${debt.relevance}'),
                       ],
                     ),
-
                     trailing: IconButton(
-                      icon: const Icon(
-                        Icons.delete,
-                        color: Colors.red
-                      ),
+                      icon: const Icon(Icons.delete, color: Colors.red),
                       onPressed: () => deleteDebt(debt.id),
                     ),
                   ),
@@ -94,7 +185,7 @@ class _DebtsPageState extends State<DebtsPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Acción para agregar una nueva deuda
+          //showAddDebtDialog();
         },
         backgroundColor: Colors.blue,
         child: const Icon(Icons.add),
