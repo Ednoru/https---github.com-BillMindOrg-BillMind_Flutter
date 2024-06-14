@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage>
           controller: _tabController,
           children: [
             DebtsPage(clientId: clientId /*?? 0*/),
-            AlertsPage(),
+            AlertsPage(clientId: clientId),
             BalancePage(),
             ProfilePage(clientId: clientId /*?? 0*/),
           ],
