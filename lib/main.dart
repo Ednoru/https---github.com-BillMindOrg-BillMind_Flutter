@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:nav_bar/database/database.dart';
 import 'package:nav_bar/pages/principal/alerts_page.dart';
 import 'package:nav_bar/pages/principal/balance_page.dart';
 import 'package:nav_bar/pages/principal/debts_page.dart';
 import 'package:nav_bar/pages/principal/profile_page.dart';
+import 'package:nav_bar/pages/sessions/login_screen.dart';
+import 'package:nav_bar/services/client_provider.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseHelper.openDB();
   runApp(const MyApp());
 }
 
@@ -13,9 +19,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MyHomePage(),
+    return ChangeNotifierProvider(
+      create: (_) => ClientProvider(),
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: MyHomePage(),
+      ),
     );
   }
 }
@@ -45,18 +54,20 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   Widget build(BuildContext context) {
+    //final clientId = Provider.of<ClientProvider>(context).clientId;
     const int clientId = 1;
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('BillMind'),
         ),
         body: TabBarView(
           controller: _tabController,
-          children: const [
-            DebtsPage(clientId: clientId),
+          children: [
+            DebtsPage(clientId: clientId /*?? 0*/),
             AlertsPage(),
             BalancePage(),
-            ProfilePage(clientId: clientId),
+            ProfilePage(clientId: clientId /*?? 0*/),
           ],
         ),
         bottomNavigationBar: Material(
