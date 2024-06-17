@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nav_bar/models/client.dart';
 import 'package:nav_bar/models/debts.dart';
 import 'package:nav_bar/services/client_service.dart';
 import 'package:nav_bar/services/debts_service.dart';
@@ -43,7 +44,84 @@ class _DebtsPageState extends State<DebtsPage> {
     final dService = DebtsService();
     await dService.deleteDebt(debtId);
   }
+  
+  Future<void> showAddDebtDialog() async {
+    TextEditingController expirationController = TextEditingController();
+    TextEditingController amountController = TextEditingController();
+    TextEditingController descriptionController = TextEditingController();
+    String? selectedRelevance;
 
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Agregar nueva deuda'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: descriptionController,
+                  decoration: const InputDecoration(labelText: 'Descripción'),
+                ),
+                TextField(
+                  controller: amountController,
+                  decoration: const InputDecoration(labelText: 'Monto a pagar'),
+                ),
+                TextField(
+                  controller: expirationController,
+                  decoration: const InputDecoration(labelText: 'Fecha de vencimiento'),
+                ),
+                DropdownButtonFormField<String>(
+                  value: selectedRelevance,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedRelevance = newValue;
+                    });
+                  },
+                  items: <String>['Baja', 'Media', 'Alta']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  decoration: const InputDecoration(labelText: 'Relevancia'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Debts newDebt = Debts(
+                  id: 1,
+                  expiration: expirationController.text,
+                  amount: amountController.text,
+                  description: descriptionController.text,
+                  relevance: selectedRelevance ?? '',
+                  client: Client(id: widget.clientId, name: '', lastName: '', mail: '', phone: '', password: '',),
+                );
+
+                // Llamar a la función addDebt() para agregar la nueva deuda
+                await addDebt(newDebt);
+
+                // Cerrar el cuadro de diálogo
+                Navigator.of(context).pop();
+              },
+              child: const Text('Agregar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
   /*
   Future<void> showAddDebtDialog() async {
     TextEditingController expirationController = TextEditingController();
@@ -185,7 +263,7 @@ class _DebtsPageState extends State<DebtsPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //showAddDebtDialog();
+          showAddDebtDialog();
         },
         backgroundColor: Colors.blue,
         child: const Icon(Icons.add),

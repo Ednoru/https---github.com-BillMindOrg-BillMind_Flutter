@@ -28,26 +28,26 @@ class DebtsService {
   }
 */
   Future<void> addDebt(Debts debt) async {
-    try {
-      final response = await http.post(
-        Uri.parse(baseUrl),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(debt.toJson()),
-      ).timeout(const Duration(seconds: 10));
+  try {
+    final response = await http.post(
+      Uri.parse(baseUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(debt.toJson()),
+    ).timeout(const Duration(seconds: 10));
 
-      if (response.statusCode != 201) {
-        throw Exception('Failed to add debt: ${response.statusCode}');
-      }
-    } on http.ClientException catch (e) {
-      throw Exception('Network error: $e');
-    } on TimeoutException catch (_) {
-      throw Exception('Request to $baseUrl timed out');
-    } catch (e) {
-      throw Exception('An unknown error occurred: $e');
+    if (response.statusCode != 201) {
+      throw Exception('Failed to add debt: ${response.statusCode}');
     }
+  } on http.ClientException catch (e) {
+    throw Exception('Network error: ${e.toString()}');
+  } on TimeoutException catch (_) {
+    throw Exception('Request to $baseUrl timed out');
+  } catch (e) {
+    throw Exception('An unknown error occurred: ${e.toString()}');
   }
+}
 
   Future<void> deleteDebt(int debtId) async {
     try {
