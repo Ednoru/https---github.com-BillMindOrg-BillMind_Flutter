@@ -4,7 +4,6 @@ import 'package:nav_bar/pages/principal/alerts_page.dart';
 import 'package:nav_bar/pages/principal/balance_page.dart';
 import 'package:nav_bar/pages/principal/debts_page.dart';
 import 'package:nav_bar/pages/principal/profile_page.dart';
-import 'package:nav_bar/pages/sessions/login_screen.dart';
 import 'package:nav_bar/services/client_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -63,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage>
         ),
         body: TabBarView(
           controller: _tabController,
-          children: [
+          children: const [
             DebtsPage(clientId: clientId /*?? 0*/),
             AlertsPage(clientId: clientId),
             BalancePage(),

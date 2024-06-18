@@ -17,7 +17,7 @@ class _AlertsPageState extends State<AlertsPage> {
   late Future<List<Debts>> _debts;
   final dService = DebtsService();
   final cService = ClientService();
-  Map<DateTime, List<Debts>> _debtsByDate = {};
+  final Map<DateTime, List<Debts>> _debtsByDate = {};
   DateTime today = DateTime.now();
   DateTime? selectedDay;
   late final ValueNotifier<List<Debts>> _selectedDebts;
