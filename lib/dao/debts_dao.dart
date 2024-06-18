@@ -9,6 +9,7 @@ class DebtsDao {
     return await db.insert(tableDebt, debt.toJson());
   }
 
+
   Future<List<Debts>> getDebts() async {
     final db = await DatabaseHelper.openDB();
     final List<Map<String, dynamic>> maps = await db.query(tableDebt);
