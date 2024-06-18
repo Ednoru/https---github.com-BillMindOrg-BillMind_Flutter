@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage>
         ),
         body: TabBarView(
           controller: _tabController,
-          children: [
+          children: const [
             DebtsPage(clientId: clientId /*?? 0*/),
             AlertsPage(clientId: clientId),
             BalancePage(),
